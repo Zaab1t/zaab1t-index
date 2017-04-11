@@ -9,8 +9,10 @@
 """
 
 import os
+import sqlite3
 from functools import wraps
-from flask import Flask, render_template, session, request, redirect, url_for
+from flask import (Flask, render_template, session, request, redirect,
+    url_for, g,)
 
 
 app = Flask(__name__)
@@ -23,6 +25,34 @@ app.config.update(dict(
     PASSWORD='default',
 ))
 app.config.from_envvar('ZAAB1T-INDEX_SETTINGS', silent=True)
+
+
+@app.cli.command('createdb')
+def createdb_command():
+    """Create the database with the schema specified in schema.sql."""
+    db = get_db()
+    with app.open_resource('schema.sql', mode='r') as f:
+        db.cursor().executescript(f.read())
+    db.commit()
+    print('Successfully created database!')
+
+
+def get_db():
+    """Return (and create, if necessary) the database connection for the
+    current application context."""
+    if not hasattr(g, 'sqlite3_db'):
+        rv = sqlite3.connect(app.config['DATABASE'])
+        rv.row_factory = sqlite3.Row
+        g.sqlite3_db = rv
+    return g.sqlite3_db
+
+
+@app.teardown_appcontext
+def close_db(error):
+    """Close the database connection (if there is one) at the end of a
+    request."""
+    if hasattr(g, 'sqlite3_db'):
+        g.sqlite3_db.close()
 
 
 def login_required(f):
