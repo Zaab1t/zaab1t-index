@@ -28,13 +28,29 @@ app.config.from_envvar('ZAAB1T-INDEX_SETTINGS', silent=True)
 
 
 @app.cli.command('createdb')
-def createdb_command():
+def createdb():
     """Create the database with the schema specified in schema.sql."""
     db = get_db()
     with app.open_resource('schema.sql', mode='r') as f:
         db.cursor().executescript(f.read())
     db.commit()
     print('Successfully created database!')
+
+
+@app.cli.command('updatedb')
+def updatedb():
+    """Add all videos from /videos to the database, if they are not in it."""
+    folder = os.getcwd() + '/videos/'
+    db = get_db()
+    videos = db.cursor().execute('select * from video').fetchall()
+    video_titles = set(video['filename'] for video in videos)
+    for file in os.listdir(folder):
+        if file in video_titles:
+            continue
+        statement = 'insert into "video" ("filename") values ("%s");' % file
+        db.cursor().execute(statement)
+        db.commit()
+        video_titles.add(file)
 
 
 def get_db():
