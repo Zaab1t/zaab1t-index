@@ -12,7 +12,7 @@ import os
 import sqlite3
 from functools import wraps
 from flask import (Flask, render_template, session, request, redirect,
-    url_for, g,)
+    url_for, g, abort,)
 
 
 app = Flask(__name__)
@@ -70,6 +70,18 @@ def login_required(f):
 @login_required
 def index():
     return 'SEARCH FOR VIDEOS'
+
+
+@app.route('/video/<ID>')
+@login_required
+def show_video(ID):
+    """Return a page with one video."""
+    db = get_db()
+    statement = 'select * from "video" where "id" = ?'
+    video = db.cursor().execute(statement, ID).fetchone()
+    if not video:
+        abort(404)
+    return 'video found'
 
 
 @app.route('/login', methods=['GET', 'POST'])
