@@ -120,3 +120,8 @@ def logout():
     """Log the user out and redirect him/her to /login."""
     session.pop('logged_in', None)
     return redirect(url_for('login'))
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return '404 Not Found', 404
