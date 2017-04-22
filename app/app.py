@@ -12,7 +12,7 @@ import os
 import sqlite3
 from functools import wraps
 from flask import (Flask, render_template, session, request, redirect,
-    url_for, g, abort,)
+    url_for, g, abort, send_from_directory)
 
 
 app = Flask(__name__)
@@ -23,6 +23,7 @@ app.config.update(dict(
     SECRET_KEY='shh top secret',
     USERNAME='admin',
     PASSWORD='default',
+    VIDEO_FOLDER=os.getcwd() + '/videos/',
 ))
 app.config.from_envvar('ZAAB1T-INDEX_SETTINGS', silent=True)
 
@@ -40,11 +41,10 @@ def createdb():
 @app.cli.command('updatedb')
 def updatedb():
     """Add all videos from /videos to the database, if they are not in it."""
-    folder = os.getcwd() + '/videos/'
     db = get_db()
     videos = db.cursor().execute('select * from video').fetchall()
     video_titles = set(video['filename'] for video in videos)
-    for file in os.listdir(folder):
+    for file in os.listdir(app.config['VIDEO_FOLDER']):
         if file in video_titles:
             continue
         statement = 'insert into "video" ("filename") values ("%s");' % file
@@ -105,7 +105,7 @@ def show_video(ID):
     video = get_video_by_id(ID)
     if not video:
         abort(404)
-    return 'video found'
+    return send_from_directory(app.config['VIDEO_FOLDER'], video['filename'])
 
 
 @app.route('/video/<ID>/edit', methods=['GET', 'POST'])
