@@ -82,6 +82,12 @@ def login_required(f):
     return inner
 
 
+def get_video_by_id(ID):
+    db = get_db()
+    db_query = 'select * from "video" where "id" = ?', ID
+    return db.cursor().execute(*db_query).fetchone()
+
+
 @app.route('/')
 @login_required
 def index():
@@ -96,12 +102,20 @@ def index():
 @login_required
 def show_video(ID):
     """Return a page with one video."""
-    db = get_db()
-    statement = 'select * from "video" where "id" = ?'
-    video = db.cursor().execute(statement, ID).fetchone()
+    video = get_video_by_id(ID)
     if not video:
         abort(404)
     return 'video found'
+
+
+@app.route('/video/<ID>/edit', methods=['GET', 'POST'])
+@login_required
+def edit_video(ID):
+    """Return a page with the video and a form to edit its' attributes."""
+    video = get_video_by_id(ID)
+    if not video:
+        abort(404)
+    return str(video['id'])
 
 
 @app.route('/login', methods=['GET', 'POST'])
