@@ -1,0 +1,6 @@
+{% for video in videos %}
+<div>
+    <a href='/video/{{ video.id }}'><h2>{{ video.filename }}</h2></a>
+    {% if video.champ %}I was playing {{ video.champ }} {% endif %}
+</div>
+{% endfor %}

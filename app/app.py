@@ -93,9 +93,9 @@ def get_video_by_id(ID):
 def index():
     """Provide the user with a listing of all videos."""
     db = get_db()
-    db_query = 'select * from "video"'
+    db_query = 'select * from "video";'
     videos = db.cursor().execute(db_query).fetchall()
-    return '\n'.join([str(video['id']) for video in videos])
+    return render_template('index.html', videos=videos)
 
 
 @app.route('/serve/<video>/')
@@ -153,3 +153,4 @@ def logout():
 @app.errorhandler(404)
 def page_not_found(e):
     return '404 Not Found', 404
+
