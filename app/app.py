@@ -98,6 +98,13 @@ def index():
     return '\n'.join([str(video['id']) for video in videos])
 
 
+@app.route('/serve/<video>/')
+@login_required
+def serve_video(video):
+    """Don't use this in production. Replace it with something like nginx."""
+    return send_from_directory(app.config['VIDEO_FOLDER'], video)
+
+
 @app.route('/video/<ID>')
 @login_required
 def show_video(ID):
@@ -105,7 +112,10 @@ def show_video(ID):
     video = get_video_by_id(ID)
     if not video:
         abort(404)
-    return send_from_directory(app.config['VIDEO_FOLDER'], video['filename'])
+    return render_template(
+        'video.html',
+        videopath=url_for('serve_video', video=video['filename']),
+     )
 
 
 @app.route('/video/<ID>/edit', methods=['GET', 'POST'])
