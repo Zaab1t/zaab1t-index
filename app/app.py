@@ -85,7 +85,11 @@ def login_required(f):
 @app.route('/')
 @login_required
 def index():
-    return 'SEARCH FOR VIDEOS'
+    """Provide the user with a listing of all videos."""
+    db = get_db()
+    db_query = 'select * from "video"'
+    videos = db.cursor().execute(db_query).fetchall()
+    return '\n'.join([str(video['id']) for video in videos])
 
 
 @app.route('/video/<ID>')
