@@ -1,0 +1,18 @@
+<form action="/">
+    <input type="submit" value="Back" />
+</form>
+<video width="1280" height="720" controls>
+    <source src="{{ url_for('serve_video', video=video.filename) }}" type="video/mp4">
+    Your browser does not support the video tag.
+</video>
+<form action="{{ url_for('edit_video', ID=video.id) }}" method="post">
+    <dl>
+        <dt>Champ:
+        <dd><input type="text" name="champ">
+        <dt>Friends:
+        <dd><input type="text" name="friends">
+        <dt>Tags:
+        <dd><input type="text" name="tags">
+        <dd><input type="submit" value="Save Changes">
+    </dl>
+</form>

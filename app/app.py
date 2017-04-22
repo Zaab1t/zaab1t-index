@@ -125,7 +125,23 @@ def edit_video(ID):
     video = get_video_by_id(ID)
     if not video:
         abort(404)
-    return str(video['id'])
+    if request.method == 'POST':
+        dbquery = (
+            'update "video"'
+            ' set "champ" = "{champ}", "friends" = "{friends}", "tags" = "{tags}"'
+            ' where "id" = {id};').format(
+                champ=request.form['champ'],
+                friends=request.form['friends'],
+                tags=request.form['tags'],
+                id=ID,
+             )
+        db = get_db()
+        db.cursor().execute(dbquery)
+        db.commit()
+    return render_template(
+        'edit-video.html',
+        video=video,
+    )
 
 
 @app.route('/login', methods=['GET', 'POST'])
