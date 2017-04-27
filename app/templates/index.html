@@ -31,18 +31,28 @@
           </button>
         <div class="ui grid list" style="margin-top:10px;">
             {% for video in videos %}
-            <div class="ui sixteen wide column" style="margin-top:-10px;">
+            <div class="ui sixteen wide column item" style="margin-top:-10px; cursor: pointer;" onclick="location.href='/video/{{ video.id }}'">
                 <div class="ui segment">
                     <div class="ui grid">
-                        <div class="ui sixteen wide column">
-                            <a href='/video/{{ video.id }}'>
+                        <div class="ui  column champ">
                                 <h2>
-                                    {{ video.filename }}
+                                    {{ video.champ }}
                                 </h2>
-                            </a>
                         </div>
-                        <div class="ui three wide column" style="margin-top:-10px;">
-                            <a class="ui teal tag label champ"> {% if video.champ %}I was playing {{ video.champ }} {% endif %}</a>
+                        <div class="ui  column time">
+                                <h2>
+                                    {{ video.recorded_on }}
+                                </h2>
+                        </div>
+                        <div class="ui sixteen wide column vtag" style="margin-top:-15px;">
+                        {% for tag in video.tags %}
+                            <a class="ui red label ">{{ tag }}</a>
+                        {% endfor %}
+                        </div>
+                        <div class="ui sixteen wide column friend" style="margin-top:-15px;">
+                        {% for friend in video.friends %}
+                            <a class="ui blue label ">{{ friend }}</a>
+                        {% endfor %}
                         </div>
                     </div>
                 </div>
@@ -53,7 +63,7 @@
 </div>
 <script type="text/javascript">
     var options = {
-    valueNames: [ 'champ' ]
+    valueNames: [ 'vtag', 'friend', 'champ','time' ]
 };
 
 var videoList = new List('videos', options);
