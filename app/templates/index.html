@@ -1,6 +1,60 @@
-{% for video in videos %}
-<div>
-    <a href='/video/{{ video.id }}'><h2>{{ video.filename }}</h2></a>
-    {% if video.champ %}I was playing {{ video.champ }} {% endif %}
+<!DOCTYPE html>
+<head>
+<script src="//cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="static/Semantic/semantic.css">
+    <script
+      src="https://code.jquery.com/jquery-3.1.1.min.js"
+      integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+      crossorigin="anonymous"></script>
+    <script src="static/Semantic/semantic.min.js"></script>
+    <title>
+        Videos
+    </title>
+</head>
+<body>
+<div class="ui centered grid">
+    <div class="ui ten wide column"' style="margin-top: 30px;">
+        <div class="ui segment">
+            <h2>
+                Videos
+            </h2>
+        </div>
+    </div>
+    <div class="ui ten wide column">
+    <div id="videos">
+        <div class="ui input">
+            <input class="search" placeholder="Search.." />
+        </div>
+
+          <button class="ui teal button sort" data-sort="champ">
+            Sort by champ
+          </button>
+        <div class="ui grid list" style="margin-top:10px;">
+            {% for video in videos %}
+            <div class="ui sixteen wide column" style="margin-top:-10px;">
+                <div class="ui segment">
+                    <div class="ui grid">
+                        <div class="ui sixteen wide column">
+                            <a href='/video/{{ video.id }}'>
+                                <h2>
+                                    {{ video.filename }}
+                                </h2>
+                            </a>
+                        </div>
+                        <div class="ui three wide column" style="margin-top:-10px;">
+                            <a class="ui teal tag label champ"> {% if video.champ %}I was playing {{ video.champ }} {% endif %}</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
 </div>
-{% endfor %}
+<script type="text/javascript">
+    var options = {
+    valueNames: [ 'champ' ]
+};
+
+var videoList = new List('videos', options);
+</script>

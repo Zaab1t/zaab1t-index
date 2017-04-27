@@ -1,11 +1,55 @@
-<h2>Login</h2>
-{% if error %}<p><strong>Error:</strong> {{ error }}{% endif %}
-<form action="{{ url_for('login') }}" method="post">
-    <dl>
-        <dt>Username:
-        <dd><input type="text" name="username">
-        <dt>Password:
-        <dd><input type="password" name="password">
-        <dd><input type="submit" value="Login">
-    </dl>
-</form>
+<!DOCTYPE html>
+
+<head>
+<link rel="stylesheet" type="text/css" href="static/Semantic/semantic.css">
+<script
+  src="https://code.jquery.com/jquery-3.1.1.min.js"
+  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+  crossorigin="anonymous"></script>
+<script src="static/Semantic/semantic.min.js"></script>
+
+    <title>
+        Login
+    </title>
+</head>
+<body>
+<div class="ui centered grid">
+    <div class="ui four wide column"' style="margin-top: 150px;">
+        <div class="ui segment">
+            <h2>Login</h2>
+                {% if error %}
+                    <div class="ui negative message close">
+                      <i class="close icon"></i>
+                      <div class="header">
+                      Error
+                      </div>
+                      <p> {{ error }}</p>
+                      </div>
+                {% endif %}
+            <form action="{{ url_for('login') }}" method="post">
+            <div class="ui fluid input">
+                <input type="text" name="username" placeholder="Username..">
+            </div>
+            <div class="ui fluid input" style="margin-top: 5px;">
+                <input type="password" name="password" placeholder="Password..">
+            </div>
+            <button class="ui blue fluid button" type="submit" value="Login" style="margin-top: 5px;">
+                Login
+            </button>
+    </form>
+    </div>
+    </div>
+    </div>
+</body>
+<script>
+
+$('.message')
+  .on('click', function() {
+    $(this)
+      .closest('.message')
+      .transition('fade')
+    ;
+  })
+;
+</script>
+
