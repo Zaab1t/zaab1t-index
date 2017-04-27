@@ -95,6 +95,10 @@ def index():
     db = get_db()
     db_query = 'select * from "video";'
     videos = db.cursor().execute(db_query).fetchall()
+    videos = [dict(video) for video in videos]
+    for video in videos:
+        video['tags'] = video['tags'].split()
+        video['friends'] = video['friends'].split()
     return render_template('index.html', videos=videos)
 
 
