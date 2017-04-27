@@ -118,6 +118,7 @@ def show_video(ID):
         abort(404)
     return render_template(
         'video.html',
+        video=video,
         videopath=url_for('serve_video', video=video['filename']),
      )
 
