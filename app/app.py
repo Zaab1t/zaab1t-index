@@ -97,8 +97,11 @@ def index():
     videos = db.cursor().execute(db_query).fetchall()
     videos = [dict(video) for video in videos]
     for video in videos:
-        video['tags'] = video['tags'].split()
-        video['friends'] = video['friends'].split()
+        for attr in ('tags', 'friends'):
+            try:
+                video[attr] = video[attr].split()
+            except AttributeError:
+                video[attr] = ['']
     return render_template('index.html', videos=videos)
 
 
@@ -174,4 +177,8 @@ def logout():
 @app.errorhandler(404)
 def page_not_found(e):
     return '404 Not Found', 404
+
+
+if __name__ == '__main__':
+    app.run()
 
