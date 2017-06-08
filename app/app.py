@@ -47,7 +47,9 @@ def updatedb():
     for file in os.listdir(app.config['VIDEO_FOLDER']):
         if file in video_titles:
             continue
-        statement = 'insert into "video" ("filename") values ("%s");' % file
+        date = '{1}/{0}/{2}'.format(*file.split()[1].split('.'))
+        statement = ('insert into "video" ("filename", "recorded_on")'
+                     'values ("%s", "%s");') % (file, date)
         db.cursor().execute(statement)
         db.commit()
         video_titles.add(file)
